@@ -1,0 +1,11 @@
+index.untouched=untouched_pdf_index
+index.type=text
+cluster.name=medienaesthetik
+node.name=medaesnode1
+document.path=[PFAD_ZU_INDEXIERENDEN_DOKUMENTEN]
+deckblatt.path=[PFAD_ZUM_DECKBLATT_ARCHIV]
+deckblattSchleuse.path=[PFAD_ZUR_DECKBLATT_SCHLEUSE]
+stopword.path=[PFAD_ZUR_STOPPWORTLISTE: /elasticsearch/config/scripts/stopwords.txt]
+serverIP=127.0.0.1
+serverPort=9300
+admin.email=[ADMIN_MAIL]
