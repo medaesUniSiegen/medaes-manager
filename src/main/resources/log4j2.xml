@@ -19,5 +19,7 @@
         </logger>
         <logger name="org.apache.pdfbox" level="WARN">
         </logger>
+        <logger name="org.apache.pdfbox.pdmodel.font" level="ERROR">
+        </logger>
     </Loggers>
 </Configuration>

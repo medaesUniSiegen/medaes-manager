@@ -36,35 +36,38 @@ public class PDFMerger implements FolderChangeListener{
 		}
 	}
 	
-	public void merge(File coverPage){
-		String documentId = getDocumentIdFromFilename(coverPage.getName());
+	/*
+	 * Merger erkennt automatisch ob ein Cover oder ein Dokument übergeben wird
+	 */
+	public static void merge(File file){
+		String documentId = UtilityFunctions.parseIdFromFilename(file.getName());
 		if(!documentId.isEmpty()){
-			File foundTextFile = new File(UtilityFunctions.findFileByID(documentId));
-			if(foundTextFile.exists()){
-				try {
-					PDDocument PDDoc = PDDocument.load(foundTextFile);
+			try {
+				File textFile = new File(UtilityFunctions.findFileByID(documentId));
+				File coverPage = new File(UtilityFunctions.findCoverPagebyID(documentId));
+				// Does the new Document already have a cover Page? (Every Cover Page has "medaes13" printed on it)
+				if(textFile.exists() && coverPage.exists()){
+					PDDocument PDDoc = PDDocument.load(textFile);
 					String textContent = new PDFTextStripper().getText(PDDoc);
-					// Does the new Document already have a cover Page? (Every Cover Page has "medaes13" printed on it)
 					if(!textContent.contains("medaes13")){
-						logger.info("Dokument ohne Deckblatt gefunden: "+foundTextFile);
+						logger.info("Dokument ohne Deckblatt gefunden: "+textFile);
 						// Add the found text document to the cover page
 						try {
 							PDFMergerUtility mut = new PDFMergerUtility();
 							mut.addSource(coverPage); // 1
-							mut.addSource(foundTextFile); // 2
+							mut.addSource(textFile); // 2
 							// Cover Page  + Text moved to create Commons 
 							// Cover Page moved to cover Page archive
-							mut.setDestinationFileName(UtilityFunctions.getAllDocumentsFolder() + "/" + foundTextFile.getName());
+							mut.setDestinationFileName(UtilityFunctions.getAllDocumentsFolder() + "/" + textFile.getName());
 							coverPage.renameTo(new File(UtilityFunctions.getCoverPageFolder() + "/Deckblatt_Archiv/" + coverPage.getName()));
-							
 							mut.mergeDocuments(null);
 						} catch (IOException e){
 							e.printStackTrace();
 						}
 					}
-				} catch (IOException e1) {
-					e1.printStackTrace();
 				}
+			} catch (IOException e1) {
+				e1.printStackTrace();
 			}
 		}
 	}

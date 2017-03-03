@@ -14,6 +14,7 @@ import org.elasticsearch.action.termvectors.TermVectorsRequest.FilterSettings;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 
+import medienaesthetik.coverPage.PDFMerger;
 import medienaesthetik.listener.FolderChangeListener;
 import medienaesthetik.utilities.ConfigHandler;
 import medienaesthetik.utilities.UtilityFunctions;
@@ -42,6 +43,7 @@ public class Indexer implements FolderChangeListener{
 		String id = UtilityFunctions.parseIdFromFilename(file.getName());
 		
 		if(!EsUtilities.documentExistsInIndex(id) && !file.getName().toLowerCase().contains("ds_store")){
+			
 			try {
 				XContentBuilder esContent = buildJsonForTextFile(file);
 				
@@ -89,6 +91,7 @@ public class Indexer implements FolderChangeListener{
 				            .endObject());
 				    EsTransporter.getInstance().update(updateRequestTouched).get();
 				}
+				PDFMerger.merge(file);
 				logger.info("Dokument indiziert: " + file.getName());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -117,6 +120,7 @@ public class Indexer implements FolderChangeListener{
 					.field("filename", file.getName())
 					.field("documentId", UtilityFunctions.parseIdFromFilename(file.getName()))
 					.field("path", file.getAbsolutePath())
+					.field("desc", UtilityFunctions.getComments(file))
 					.field("size", file.length())
 					.field("content", UtilityFunctions.parseContent(file))
 				.endObject();
