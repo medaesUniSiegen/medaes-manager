@@ -63,8 +63,13 @@ public class PDFMerger implements FolderChangeListener{
 							mut.mergeDocuments(null);
 						} catch (IOException e){
 							e.printStackTrace();
+						} finally {
+							if(PDDoc != null){
+								PDDoc.close();
+							}
 						}
 					}
+					PDDoc.close();
 				}
 			} catch (IOException e1) {
 				e1.printStackTrace();

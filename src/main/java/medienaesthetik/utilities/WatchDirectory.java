@@ -28,7 +28,16 @@ public class WatchDirectory implements Runnable {
 	
 	private static final Logger logger = LogManager.getLogger("WatchDirectory");
 	private File folderToWatch;
-	private List<FolderChangeListener> listeners = new ArrayList<FolderChangeListener>();
+	private static List<FolderChangeListener> listeners = new ArrayList<FolderChangeListener>();
+	
+	public WatchDirectory(String folderToWatch, FolderChangeListener listener){
+		this.folderToWatch = new File(folderToWatch);
+		this.addListener(listener);
+	}
+	
+	public WatchDirectory(String folderToWatch){
+		this.folderToWatch = new File(folderToWatch);
+	}
 	
 	private void watch(Path path){
 		// Sanity check - Check if path is a folder
@@ -98,19 +107,10 @@ public class WatchDirectory implements Runnable {
 		}
 	}
 	
-	public void addListener(FolderChangeListener toAdd){
+	public static void addListener(FolderChangeListener toAdd){
 		listeners.add(toAdd);
 	}
-	
-	public WatchDirectory(String folderToWatch, FolderChangeListener listener){
-		this.folderToWatch = new File(folderToWatch);
-		this.addListener(listener);
-	}
-	
-	public WatchDirectory(String folderToWatch){
-		this.folderToWatch = new File(folderToWatch);
-	}
-	
+		
 	public void run() {
 		watch(Paths.get(folderToWatch.toURI()));
 	}

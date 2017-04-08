@@ -25,7 +25,7 @@ public class Indexer implements FolderChangeListener{
 	private File[] listOfTextFiles;
 	
 	public Indexer(){
-		File folder = new File(ConfigHandler.getInstance().getValue("document.path"));
+		File folder = new File(ConfigHandler.getInstance().getValue("document_bearb.path"));
 		listOfTextFiles = folder.listFiles();
 		
 		for(File file : listOfTextFiles){

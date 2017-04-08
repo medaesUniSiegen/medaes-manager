@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +22,7 @@ public final class UtilityFunctions {
 	
 	private UtilityFunctions(){}
 	
-	private static File allDocumentsFolder = new File(ConfigHandler.getInstance().getValue("document.path"));
+	private static File allDocumentsFolder = new File(ConfigHandler.getInstance().getValue("document_bearb.path"));
 	private static File coverPageFolder = new File(ConfigHandler.getInstance().getValue("deckblatt.path"));
 	private static File coverPageSchleuse = new File(ConfigHandler.getInstance().getValue("deckblattSchleuse.path"));
 	
@@ -146,13 +147,12 @@ public final class UtilityFunctions {
 	        
 	        return output(process.getInputStream());
 	    } catch (IOException | InterruptedException e1) {
-	        // TODO Auto-generated catch block
 	        e1.printStackTrace();
 	    }
 		
 		return "";
 	}
-	
+		
 	public static File getAllDocumentsFolder (){
 		return allDocumentsFolder;
 	}
