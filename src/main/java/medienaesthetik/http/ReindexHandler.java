@@ -40,7 +40,7 @@ public class ReindexHandler implements HttpHandler{
 		
 		CreateIndexRequest createRequest = new CreateIndexRequest(_futureIndexName);
 		createRequest.settings(EsUtilities.getSettings());
-		createRequest.mapping("text", EsUtilities.getUntouchedMapping());
+		createRequest.mapping("text", EsUtilities.getTouchedMapping());
 		EsTransporter.getInstance().admin().indices().create(createRequest).actionGet();
 		
 		SearchResponse scrollResp = EsTransporter.getInstance().prepareSearch(EsUtilities.getUntouchedIndexName()) // Specify index

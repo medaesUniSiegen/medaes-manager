@@ -1,6 +1,9 @@
 package medienaesthetik.elasticsearch;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -199,14 +202,32 @@ public class EsUtilities {
 	 * @return
 	 */
 	public static boolean documentExistsInIndex(String id){
-		SearchResponse response = EsTransporter.getInstance().prepareSearch(ConfigHandler.getInstance().getValue("index.untouched"))
-			.setTypes(ConfigHandler.getInstance().getValue("index.type"))
-			.setQuery(QueryBuilders.termQuery("documentId", id))
-			.setFrom(0).setSize(60).setExplain(true)
-			.execute()
-			.actionGet();
-		if(response.getHits().getTotalHits() >= 1 || id.isEmpty()){
-			return true;
+		URL url;
+		int statusCode = 0;
+		try {
+			url = new URL("http://localhost:9200/" + ConfigHandler.getInstance().getValue("index.untouched"));
+			HttpURLConnection http = (HttpURLConnection)url.openConnection();
+			statusCode = http.getResponseCode();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(statusCode == 200){
+			SearchResponse response = EsTransporter.getInstance().prepareSearch(ConfigHandler.getInstance().getValue("index.untouched"))
+					.setTypes(ConfigHandler.getInstance().getValue("index.type"))
+					.setQuery(QueryBuilders.termQuery("documentId", id))
+					.setFrom(0).setSize(60).setExplain(true)
+					.execute()
+					.actionGet();
+			if(response.getHits().getTotalHits() >= 1 || id.isEmpty()){
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		else {
 			return false;
@@ -268,16 +289,19 @@ public class EsUtilities {
 		
 		Object[] indexArray = getAllIndices();
 		
-		if(indexArray.length == 0){
-			CreateIndexRequest createRequestUntouched = new CreateIndexRequest(ConfigHandler.getInstance().getValue("index.untouched"));
-			createRequestUntouched.mapping("text", getUntouchedMapping());
-			EsTransporter.getInstance().admin().indices().create(createRequestUntouched).actionGet();
-			
-			CreateIndexRequest createRequestTouched = new CreateIndexRequest("pdf_index_v0");
-			createRequestTouched.settings(getSettings());
-			createRequestTouched.mapping("text", getTouchedMapping());
-			EsTransporter.getInstance().admin().indices().create(createRequestTouched).actionGet();
-			EsTransporter.getInstance().admin().indices().prepareAliases().addAlias("pdf_index_v0", aliasName).get();
+		for(Object indexName : indexArray){
+			if(indexName.toString().contains("pdf_index")){
+				return;
+			}
 		}
+		CreateIndexRequest createRequestUntouched = new CreateIndexRequest(ConfigHandler.getInstance().getValue("index.untouched"));
+		createRequestUntouched.mapping("text", getUntouchedMapping());
+		EsTransporter.getInstance().admin().indices().create(createRequestUntouched).actionGet();
+		
+		CreateIndexRequest createRequestTouched = new CreateIndexRequest("pdf_index_v0");
+		createRequestTouched.settings(getSettings());
+		createRequestTouched.mapping("text", getTouchedMapping());
+		EsTransporter.getInstance().admin().indices().create(createRequestTouched).actionGet();
+		EsTransporter.getInstance().admin().indices().prepareAliases().addAlias("pdf_index_v0", aliasName).get();
 	}
 }

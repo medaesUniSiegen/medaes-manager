@@ -29,7 +29,9 @@ public class Indexer implements FolderChangeListener{
 		listOfTextFiles = folder.listFiles();
 		
 		for(File file : listOfTextFiles){
-			index(file);
+			if(!file.getName().contains("Deckblatt")){
+				index(file);
+			}
 		}
 		logger.info("Index Modul gestartet und bereit");
 	}
@@ -135,10 +137,14 @@ public class Indexer implements FolderChangeListener{
 	@Override
 	public void folderChanged(File changedFile, String event) {
 		if(event.contains("ENTRY_CREATE")){
-			index(changedFile);
+			if(!changedFile.getName().contains("Deckblatt")){
+				index(changedFile);
+			}
 		}
 		else if(event.contains("ENTRY_DELETE")){
-			EsUtilities.deleteDocument(changedFile.getName());
+			if(!changedFile.getName().contains("Deckblatt")){
+				EsUtilities.deleteDocument(changedFile.getName());
+			}
 		}
 	}
 }

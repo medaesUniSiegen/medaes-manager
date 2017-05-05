@@ -63,7 +63,7 @@ public class ArchiveIntegrityTask extends TimerTask {
 			for(File corruptFile : corruptedFiles){
 				corruptedFileString = corruptedFileString + corruptFile.getAbsolutePath() + "\n";
 			}
-			StatusMail.getInstance().sendMail("Archiv Integritäts Test", StatusMail.getInstance().buildMailText("Archive Integritätscheck", corruptedFileString, ""));
+			//StatusMail.getInstance().sendMail("Archiv Integritäts Test", StatusMail.getInstance().buildMailText("Archive Integritätscheck", corruptedFileString, ""));
 			WriteToFilemakerField.getInstance().write(ConfigHandler.getInstance().getValue("filemaker.status.file.portal"), ConfigHandler.getInstance().getValue("filemaker.status.layout"), ConfigHandler.getInstance().getValue("filemaker.status.field.Archive_Integritycheck_result"), "Folgende Dateien sollten überprüft werden: \n" + corruptedFileString);
 		}
 		else {

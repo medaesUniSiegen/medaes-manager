@@ -32,7 +32,9 @@ public class PDFMerger implements FolderChangeListener{
 	public void folderChanged(File coverPage, String event) {
 		// a new cover Page triggered the folderChanged Event
 		if(event.contains("ENTRY_CREATE")){
-			this.merge(coverPage);
+			if(coverPage.getName().contains("Deckblatt")){
+				this.merge(coverPage);
+			}
 		}
 	}
 	
