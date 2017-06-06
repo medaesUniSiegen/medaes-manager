@@ -11,6 +11,8 @@ import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
+import com.google.common.io.Files;
+
 import medienaesthetik.listener.FolderChangeListener;
 import medienaesthetik.utilities.UtilityFunctions;
 
@@ -61,8 +63,10 @@ public class PDFMerger implements FolderChangeListener{
 							// Cover Page  + Text moved to create Commons 
 							// Cover Page moved to cover Page archive
 							mut.setDestinationFileName(UtilityFunctions.getAllDocumentsFolder() + "/" + textFile.getName());
-							coverPage.renameTo(new File(UtilityFunctions.getCoverPageFolder() + "/Deckblatt_Archiv/" + coverPage.getName()));
+							Files.copy(coverPage.getAbsoluteFile(), new File(UtilityFunctions.getCoverPageFolder() + "/Deckblatt_Archiv/" + coverPage.getName()));
+							//coverPage.renameTo(new File(UtilityFunctions.getCoverPageFolder() + "/Deckblatt_Archiv/" + coverPage.getName()));
 							mut.mergeDocuments(null);
+							coverPage.delete();
 						} catch (IOException e){
 							e.printStackTrace();
 						} finally {
