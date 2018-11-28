@@ -49,11 +49,11 @@ public class PDFMerger implements FolderChangeListener{
 			try {
 				File textFile = new File(UtilityFunctions.findFileByID(documentId));
 				File coverPage = new File(UtilityFunctions.findCoverPagebyID(documentId));
-				// Does the new Document already have a cover Page? (Every Cover Page has "medaes13" printed on it)
+				// Does the new Document already have a cover Page? (Every Cover Page has "medaes14" printed on it)
 				if(textFile.exists() && coverPage.exists()){
 					PDDocument PDDoc = PDDocument.load(textFile);
 					String textContent = new PDFTextStripper().getText(PDDoc);
-					if(!textContent.contains("medaes13")){
+					if(!textContent.contains("medaes14")){
 						logger.info("Dokument ohne Deckblatt gefunden: "+textFile);
 						// Add the found text document to the cover page
 						try {
