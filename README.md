@@ -66,3 +66,8 @@ Die definierten **Settings** des Index:
 - Erstellt automatisch die notwendigen Indizes
 - Ein Verzeichnis wird vollständig indiziert und auf Veränderungen überwacht (Dokument hinzugefügt -> wird indiziert, Dokument gelöscht -> aus Index entfernen)
 - HTTP API um Stoppwortliste zu verändern & abzurufen und neue Indizierung durchzuführen
+
+#### Bezüglich config
+- Die Konfigurationsdatei, auf die der Manager zugreift liegt unter:
+    /Volumes/CREATE_Archiv/CREATE_Extensions/8_Textanalyse/elasticsearch/indexer/config.properties
+- Bei Servermigration/Änderung der Ordnerstruktur müssen hier die Pfade angepasst werden.
